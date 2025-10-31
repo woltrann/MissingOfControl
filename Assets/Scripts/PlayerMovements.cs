@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovements : MonoBehaviour
@@ -28,7 +29,9 @@ public class PlayerMovements : MonoBehaviour
     }
 
     void Update()
-    {
+    {        
+        if (GameManager.instance.isPaused) return;
+
         Move();
         MouseLook();
 
@@ -70,7 +73,7 @@ public class PlayerMovements : MonoBehaviour
         transform.Rotate(Vector3.up * mouseX);
 
         xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -40f, 50f);
+        xRotation = Mathf.Clamp(xRotation, -10f, 10f);
         cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
     }
 
@@ -113,5 +116,9 @@ public class PlayerMovements : MonoBehaviour
         {
             Debug.Log("karakter düþmana temas etti");
         }
+
+
     }
+
+
 }
