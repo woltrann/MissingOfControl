@@ -20,6 +20,9 @@ public class PlayerMovements : MonoBehaviour
     bool isGrounded;
     float nextAttackTime = 0f;
 
+    public AudioSource attackAudio;
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -33,7 +36,7 @@ public class PlayerMovements : MonoBehaviour
     void Update()
     {
         if (GameManager.instance != null && GameManager.instance.isPaused) return;
-
+        if(GameManager.instance != null && GameManager.instance.isFinished) return;
 
         if (GameManager.instance.hasE && Input.GetKeyDown(KeyCode.E))
         {
@@ -101,6 +104,12 @@ public class PlayerMovements : MonoBehaviour
     {
         anim.SetTrigger("Attack");
         Debug.Log("Player: saldýrý animasyonu tetiklendi");
+        if (attackAudio != null && attackAudio.clip != null)
+        {
+            attackAudio.Play();
+            Debug.Log("Vurma sesi çaldý!");
+        }
+
     }
 
 
@@ -144,11 +153,15 @@ public class PlayerMovements : MonoBehaviour
             isGrounded = false;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag("Door"))
         {
-            Debug.Log("karakter düþmana temas etti");
+            if (GameManager.instance.hasEnter && Input.GetKeyDown(KeyCode.Return))
+            {
+                GameManager.instance.Finish();
+                Debug.Log("Oyun bitiþ tetiklendi!");
+            }
         }
     }
 }

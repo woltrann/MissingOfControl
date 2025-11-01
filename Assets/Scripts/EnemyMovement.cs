@@ -13,7 +13,9 @@ public class EnemyMovement : MonoBehaviour
     public bool isAttacking = false;
 
     public Animator anim;
-    private PlayerHealth playerHealth; // Player’ın can scriptini tutacağız
+    private PlayerHealth playerHealth;
+    public AudioSource attackAudio;
+
 
     private void Awake()
     {
@@ -68,6 +70,11 @@ public class EnemyMovement : MonoBehaviour
         {
             playerHealth.TakeDamage(attackDamage);
             nextAttackTime = Time.time + attackCooldown;
+        }
+        if (attackAudio != null && attackAudio.clip != null)
+        {
+            attackAudio.Play();
+            Debug.Log("Vurma sesi çaldı!");
         }
     }
 }

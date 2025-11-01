@@ -10,12 +10,15 @@ public class GameManager : MonoBehaviour
     public GameObject gameOverMenu;
     public GameObject finishMenu;
     public bool isPaused = false;
+    public bool isFinished = false;
 
     public bool hasE = false;
     public bool hasA = false;
     public bool hasS = false;
     public bool hasD = false;
     public bool hasEnter = false;
+
+    public AudioSource congrats;
 
     private void Awake()
     {
@@ -77,7 +80,12 @@ public class GameManager : MonoBehaviour
     {
         gameUI.SetActive(false);
         finishMenu.SetActive(true);
-        Time.timeScale = 0f;
+        isFinished = true;
+        Time.timeScale = 1f;
+        if (congrats != null && congrats.clip != null)
+        {
+            congrats.Play();
+        }
     }
     public void Restart()
     {

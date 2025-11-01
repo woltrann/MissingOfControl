@@ -128,6 +128,7 @@ public class ProgressZone : MonoBehaviour
             case "enter":
                 imageEnter.SetActive(true);
                 imageEnter2.SetActive(true);
+                GameManager.instance.hasEnter = true;
                 collectedText = "Enter tuþu alýndý!";
                 break;
         }
