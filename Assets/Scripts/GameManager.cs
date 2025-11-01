@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public bool hasEnter = false;
 
     public AudioSource congrats;
+    public Animator gateAnimator;
 
     private void Awake()
     {
@@ -78,14 +79,17 @@ public class GameManager : MonoBehaviour
     }
     public void Finish()
     {
-        gameUI.SetActive(false);
-        finishMenu.SetActive(true);
-        isFinished = true;
-        Time.timeScale = 1f;
+        gateAnimator.SetTrigger("finish");
+    }
+    public void End()
+    {
         if (congrats != null && congrats.clip != null)
         {
             congrats.Play();
         }
+        gameUI.SetActive(false);
+        Cursor.lockState = CursorLockMode.None; // Fareyi serbest býrak
+        Cursor.visible = true;
     }
     public void Restart()
     {

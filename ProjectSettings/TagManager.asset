@@ -12,6 +12,7 @@ TagManager:
   - S
   - E
   - enter
+  - end
   layers:
   - Default
   - TransparentFX

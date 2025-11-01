@@ -153,6 +153,13 @@ public class PlayerMovements : MonoBehaviour
             isGrounded = false;
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("end"))
+        {
+
+        }
+    }
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Door"))
