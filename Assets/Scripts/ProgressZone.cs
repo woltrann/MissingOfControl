@@ -10,11 +10,12 @@ public class ProgressZone : MonoBehaviour
     public float fillTime = 5f;    // Dolma süresi (saniye)
 
     [Header("Görseller")]
-    public GameObject imageE;
-    public GameObject imageA;
-    public GameObject imageS;
-    public GameObject imageD;
-    public GameObject imageEnter;
+
+    public GameObject imageE, imageE2;
+    public GameObject imageA, imageA2;
+    public GameObject imageS, imageS2;
+    public GameObject imageD, imageD2;
+    public GameObject imageEnter, imageEnter2;
 
     private bool playerInside = false;
     private float currentFill = 0f;
@@ -103,22 +104,27 @@ public class ProgressZone : MonoBehaviour
         {
             case "E":
                 imageE.SetActive(true);
+                imageE2.SetActive(true);
                 Debug.Log("E tamamlandý ve obje yok edildi!");
                 break;
             case "A":
                 imageA.SetActive(true);
+                imageA2.SetActive(true);
                 Debug.Log("A tamamlandý ve obje yok edildi!");
                 break;
             case "S":
                 imageS.SetActive(true);
+                imageS2.SetActive(true);
                 Debug.Log("S tamamlandý ve obje yok edildi!");
                 break;
             case "D":
                 imageD.SetActive(true);
+                imageD2.SetActive(true);
                 Debug.Log("D tamamlandý ve obje yok edildi!");
                 break;
             case "enter":
                 imageEnter.SetActive(true);
+                imageEnter2.SetActive(true);
                 Debug.Log("Enter tamamlandý ve obje yok edildi!");
                 break;
         }

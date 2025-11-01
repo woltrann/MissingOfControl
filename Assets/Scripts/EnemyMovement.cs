@@ -1,13 +1,24 @@
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyMovement : MonoBehaviour
 {
+    public static EnemyMovement instance;
     public Transform target;
     public float speed = 2f;
     public float detectionRange = 5f;
-    bool moving = false;
-    Animator anim;
+    public int attackDamage = 10;
+    public float attackCooldown = 1.2f;
+    private float nextAttackTime = 0f;
+    public bool isAttacking = false;
 
+    public Animator anim;
+    private PlayerHealth playerHealth; // Player’ın can scriptini tutacağız
+
+    private void Awake()
+    {
+        instance = this;
+    }
     void Start()
     {
         anim = GetComponent<Animator>();
@@ -15,13 +26,13 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
+        if (isAttacking) return; // saldırı halindeyken hareket etme
+
         float distance = Vector3.Distance(transform.position, target.position);
         if (distance > detectionRange) return;
-        if (moving) return;
 
+        // Player’a doğru yürü
         Vector3 direction = (target.position - transform.position).normalized;
-
-        direction = direction.normalized;
         transform.position += direction * speed * Time.deltaTime;
 
         if (direction != Vector3.zero)
@@ -30,11 +41,14 @@ public class EnemyMovement : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-       if (other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
-            anim.SetBool("Attack", true);
-            moving = true;
-            Debug.Log("D��man tetikledi!");
+            
+                anim.SetBool("Attack", true);
+                isAttacking = true;
+                playerHealth = other.GetComponent<PlayerHealth>();
+            
+            
         }
     }
 
@@ -43,7 +57,17 @@ public class EnemyMovement : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             anim.SetBool("Attack", false);
-            moving= false;
+            isAttacking = false;
+        }
+    }
+
+    // 🔥 Bu fonksiyonu animasyonun tam vurma anına event olarak ekle!
+    public void DealDamage()
+    {
+        if (playerHealth != null && Time.time >= nextAttackTime)
+        {
+            playerHealth.TakeDamage(attackDamage);
+            nextAttackTime = Time.time + attackCooldown;
         }
     }
 }

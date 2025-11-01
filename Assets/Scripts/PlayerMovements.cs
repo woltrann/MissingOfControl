@@ -24,13 +24,15 @@ public class PlayerMovements : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
+        if (cameraTransform == null && Camera.main != null)
+            cameraTransform = Camera.main.transform;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
     void Update()
-    {        
-        if (GameManager.instance.isPaused) return;
+    {
+        if (GameManager.instance != null && GameManager.instance.isPaused) return;
 
         Move();
         MouseLook();
@@ -74,21 +76,37 @@ public class PlayerMovements : MonoBehaviour
 
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -10f, 10f);
-        cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        if (cameraTransform != null)
+            cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
     }
 
     void Attack()
     {
         anim.SetTrigger("Attack");
-        Debug.Log("saldýrý yapýldý ");
-        // Saldýrý anýnda düþmanlarý kontrol et (animation event ile de tetikleyebilirsin)
+        Debug.Log("Player: saldýrý animasyonu tetiklendi");
+    }
 
-        //foreach (Collider enemy in hitEnemies)
-        //{
-        //    Debug.Log("Vurulan düþman: " + enemy.name);
-        //    // Düþman scriptine damage gönder
-        //    enemy.GetComponent<EnemyHealth>()?.TakeDamage(attackDamage);
-        //}
+    // ---- Animation Event tarafýndan çaðrýlacak fonksiyon ----
+    // Attack animasyonunda vuruþ anýna bir Animation Event ekleyip bu fonksiyonu seç.
+    public void DealDamage()
+    {
+        if (attackPoint == null)
+        {
+            Debug.LogWarning("Player: attackPoint atanmadý.");
+            return;
+        }
+
+        Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRange, enemyLayer);
+
+        foreach (Collider enemy in hitEnemies)
+        {
+            EnemyHealth eh = enemy.GetComponent<EnemyHealth>();
+            if (eh != null)
+            {
+                eh.TakeDamage(attackDamage);
+                Debug.Log($"Player vurdu: {enemy.name} -> {attackDamage} hasar");
+            }
+        }
     }
 
     void OnDrawGizmosSelected()
@@ -116,9 +134,5 @@ public class PlayerMovements : MonoBehaviour
         {
             Debug.Log("karakter düþmana temas etti");
         }
-
-
     }
-
-
 }

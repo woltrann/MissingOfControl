@@ -63,7 +63,9 @@ public class GameManager : MonoBehaviour
     {
         gameUI.SetActive(false);
         gameOverMenu.SetActive(true);
-        Time.timeScale = 0f;
+        Cursor.lockState = CursorLockMode.None; // Fareyi serbest býrak
+        Cursor.visible = true;
+        //Time.timeScale = 0f;
     }
     public void Finish()
     {
