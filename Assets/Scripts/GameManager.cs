@@ -1,3 +1,5 @@
+using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,8 +11,16 @@ public class GameManager : MonoBehaviour
     public GameObject pauseMenu;
     public GameObject gameOverMenu;
     public GameObject finishMenu;
+    public GameObject startDialog;
+    public TextMeshProUGUI startText;
+    public GameObject finishDialog;
+    public TextMeshProUGUI finishText;
     public bool isPaused = false;
     public bool isFinished = false;
+
+    [TextArea]
+    public float typingSpeed = 0.05f; // Harfler arasý süre
+    public AudioSource typingSFX;
 
     public bool hasE = false;
     public bool hasA = false;
@@ -18,8 +28,8 @@ public class GameManager : MonoBehaviour
     public bool hasD = false;
     public bool hasEnter = false;
 
-    public AudioSource congrats;
     public Animator gateAnimator;
+    public Animator keyboardAnimator;
 
     private void Awake()
     {
@@ -45,6 +55,7 @@ public class GameManager : MonoBehaviour
     }
     public void StartGame()
     {
+        StartCoroutine(ShowStartTextCoroutine("Görünüþe bakýlýrsa kontrolünü kaybetmiþsin... Geri kazanman lazým..."));
         mainMenu.SetActive(false);
         gameUI.SetActive(true);
         Time.timeScale = 1f;
@@ -53,6 +64,32 @@ public class GameManager : MonoBehaviour
         Cursor.visible = false;
 
     }
+
+    IEnumerator ShowStartTextCoroutine(string message)
+    {
+        startDialog.SetActive(true);
+        startText.text = "";
+
+        // Harf harf yazý efekti
+        foreach (char c in message)
+        {
+            startText.text += c;
+
+            if (typingSFX != null)
+                typingSFX.PlayOneShot(typingSFX.clip);
+
+            yield return new WaitForSeconds(0.06f);
+        }
+
+        // Yazý bittikten sonra 2 saniye bekle ve paneli kapat
+        yield return new WaitForSeconds(2f);
+        startDialog.SetActive(false);
+        if (isFinished)
+        {
+            finishMenu.SetActive(true);
+        }
+    }
+
     public void PauseGame()
     {
         pauseMenu.SetActive(true);
@@ -83,10 +120,9 @@ public class GameManager : MonoBehaviour
     }
     public void End()
     {
-        if (congrats != null && congrats.clip != null)
-        {
-            congrats.Play();
-        }
+        isFinished = true;
+        keyboardAnimator.SetTrigger("finish");
+        StartCoroutine(ShowStartTextCoroutine("Tebrik ederim yumruk atýp da fýrlayan parçalarýmý bulup geri getirmiþsin. "));
         gameUI.SetActive(false);
         Cursor.lockState = CursorLockMode.None; // Fareyi serbest býrak
         Cursor.visible = true;

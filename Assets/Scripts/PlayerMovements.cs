@@ -157,7 +157,8 @@ public class PlayerMovements : MonoBehaviour
     {
         if (other.CompareTag("end"))
         {
-
+            GameManager.instance.End();
+            anim.SetFloat("Speed", 0);
         }
     }
     private void OnTriggerStay(Collider other)
@@ -170,5 +171,6 @@ public class PlayerMovements : MonoBehaviour
                 Debug.Log("Oyun bitiþ tetiklendi!");
             }
         }
+
     }
 }
