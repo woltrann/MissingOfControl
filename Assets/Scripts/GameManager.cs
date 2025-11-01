@@ -136,4 +136,10 @@ public class GameManager : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void Alert()
+    {
+        StartCoroutine(ShowStartTextCoroutine("Tüm tuþlarý bulman lazým."));
+
+    }
 }

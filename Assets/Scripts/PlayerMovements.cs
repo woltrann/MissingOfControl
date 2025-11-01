@@ -165,11 +165,20 @@ public class PlayerMovements : MonoBehaviour
     {
         if (other.CompareTag("Door"))
         {
+            Debug.Log("Kapýya geldin");
             if (GameManager.instance.hasEnter && Input.GetKeyDown(KeyCode.Return))
             {
-                GameManager.instance.Finish();
-                Debug.Log("Oyun bitiþ tetiklendi!");
+                if (GameManager.instance.hasEnter && GameManager.instance.hasE && GameManager.instance.hasA && GameManager.instance.hasS && GameManager.instance.hasD)
+                {
+                    GameManager.instance.Finish();
+                    Debug.Log("Oyun bitiþ tetiklendi!");
+                }
+                else
+                {
+                    GameManager.instance.Alert();
+                }
             }
+            
         }
 
     }

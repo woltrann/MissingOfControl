@@ -94,6 +94,7 @@ public class ProgressZone : MonoBehaviour
 
     void OnFillComplete(string tag, GameObject target)
     {
+        currentFill = 0f;
         circleUI.SetActive(false);
         if (target != null) Destroy(target);
 
