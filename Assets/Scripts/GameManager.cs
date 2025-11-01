@@ -11,6 +11,12 @@ public class GameManager : MonoBehaviour
     public GameObject finishMenu;
     public bool isPaused = false;
 
+    public bool hasE = false;
+    public bool hasA = false;
+    public bool hasS = false;
+    public bool hasD = false;
+    public bool hasEnter = false;
+
     private void Awake()
     {
         instance = this;

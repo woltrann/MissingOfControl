@@ -34,6 +34,14 @@ public class PlayerMovements : MonoBehaviour
     {
         if (GameManager.instance != null && GameManager.instance.isPaused) return;
 
+
+        if (GameManager.instance.hasE && Input.GetKeyDown(KeyCode.E))
+        {
+            // Can verme iþlemi
+            PlayerHealth.instance.Heal(20); // örnek olarak 20 can versin
+        }
+
+
         Move();
         MouseLook();
 
@@ -43,7 +51,7 @@ public class PlayerMovements : MonoBehaviour
             anim.SetTrigger("Jump");
         }
 
-        // Saldýrý kontrolü
+
         if (Input.GetMouseButtonDown(0) && Time.time >= nextAttackTime)
         {
             Attack();
@@ -53,8 +61,16 @@ public class PlayerMovements : MonoBehaviour
 
     void Move()
     {
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
+        float x = 0f;
+        float z = 0f;
+
+        // W tuþu her zaman aktif
+        if (Input.GetKey(KeyCode.W)) z = 1f;
+
+        // A, S, D harfleri GameManager’a göre açýlýr
+        if (GameManager.instance.hasA && Input.GetKey(KeyCode.A)) x = -1f;
+        if (GameManager.instance.hasD && Input.GetKey(KeyCode.D)) x = 1f;
+        if (GameManager.instance.hasS && Input.GetKey(KeyCode.S)) z = -1f;
 
         float currentSpeed = Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : moveSpeed;
 
@@ -66,6 +82,7 @@ public class PlayerMovements : MonoBehaviour
         float speed = new Vector2(x, z).magnitude * currentSpeed;
         anim.SetFloat("Speed", speed);
     }
+
 
     void MouseLook()
     {
@@ -86,8 +103,7 @@ public class PlayerMovements : MonoBehaviour
         Debug.Log("Player: saldýrý animasyonu tetiklendi");
     }
 
-    // ---- Animation Event tarafýndan çaðrýlacak fonksiyon ----
-    // Attack animasyonunda vuruþ anýna bir Animation Event ekleyip bu fonksiyonu seç.
+
     public void DealDamage()
     {
         if (attackPoint == null)

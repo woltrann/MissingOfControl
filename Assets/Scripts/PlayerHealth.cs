@@ -26,7 +26,12 @@ public class PlayerHealth : MonoBehaviour
             healthSlider.value = currentHealth;
         }
     }
-
+    public void Heal(int amount)
+    {
+        currentHealth += amount;
+        if (currentHealth > maxHealth) currentHealth = maxHealth;
+        Debug.Log("Can basýldý + " + amount);
+    }
     public void TakeDamage(int amount)
     {
         if (isDead) return;

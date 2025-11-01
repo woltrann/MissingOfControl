@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using TMPro;
 
 public class ProgressZone : MonoBehaviour
 {
@@ -8,9 +9,10 @@ public class ProgressZone : MonoBehaviour
     public Image progressCircle;   // Çemberin Image bileþeni
     public GameObject circleUI;    // Çemberin UI objesi (aktif/pasif kontrolü)
     public float fillTime = 5f;    // Dolma süresi (saniye)
+    public GameObject infoPanel;
+    public TextMeshProUGUI infoText;
 
     [Header("Görseller")]
-
     public GameObject imageE, imageE2;
     public GameObject imageA, imageA2;
     public GameObject imageS, imageS2;
@@ -32,6 +34,7 @@ public class ProgressZone : MonoBehaviour
         imageS.SetActive(false);
         imageD.SetActive(false);
         imageEnter.SetActive(false);
+        infoPanel.SetActive(false);
     }
 
     void OnTriggerEnter(Collider other)
@@ -92,42 +95,55 @@ public class ProgressZone : MonoBehaviour
     void OnFillComplete(string tag, GameObject target)
     {
         circleUI.SetActive(false);
+        if (target != null) Destroy(target);
 
-        // Objeyi yok et
-        if (target != null)
-        {
-            Destroy(target);
-        }
+        string collectedText = "";
 
-        // Ýlgili görseli aktif et
         switch (tag)
         {
             case "E":
                 imageE.SetActive(true);
                 imageE2.SetActive(true);
-                Debug.Log("E tamamlandý ve obje yok edildi!");
+                GameManager.instance.hasE = true;
+                collectedText = "E harfi alýndý! (Can basma aktif)";
                 break;
             case "A":
                 imageA.SetActive(true);
                 imageA2.SetActive(true);
-                Debug.Log("A tamamlandý ve obje yok edildi!");
+                GameManager.instance.hasA = true;
+                collectedText = "A harfi alýndý! (Sola hareket aktif)";
                 break;
             case "S":
                 imageS.SetActive(true);
                 imageS2.SetActive(true);
-                Debug.Log("S tamamlandý ve obje yok edildi!");
+                GameManager.instance.hasS = true;
+                collectedText = "S harfi alýndý! (Geri hareket aktif)";
                 break;
             case "D":
                 imageD.SetActive(true);
                 imageD2.SetActive(true);
-                Debug.Log("D tamamlandý ve obje yok edildi!");
+                GameManager.instance.hasD = true;
+                collectedText = "D harfi alýndý! (Saða hareket aktif)";
                 break;
             case "enter":
                 imageEnter.SetActive(true);
                 imageEnter2.SetActive(true);
-                Debug.Log("Enter tamamlandý ve obje yok edildi!");
+                collectedText = "Enter tuþu alýndý!";
                 break;
         }
+
+        StartCoroutine(ShowInfo(collectedText));
+    }
+
+
+    IEnumerator ShowInfo(string message)
+    {
+        infoPanel.SetActive(true);
+        infoText.text = message;
+
+        yield return new WaitForSeconds(3f);
+
+        infoPanel.SetActive(false);
     }
 
     bool IsValidTag(string tag)
